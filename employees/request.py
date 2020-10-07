@@ -1,4 +1,13 @@
-EMPLOYEES = []
+EMPLOYEES = [
+    {
+        "id": 1,
+        "name": "Butt McButtenstein",
+        "location": "666 Devil Dirt Button Drive",
+        "manager": False,
+        "full time": True,
+        "hourly rate": 12
+    }
+]
 
 
 def get_all_employees():
