@@ -1,11 +1,13 @@
 LOCATIONS = [
     {
         "id": 1,
-        "name": "Paris",
+        "name": "Nashville North",
+        "address": "8422 Johnson Pike"
     },
     {
         "id": 2,
-        "name": "Inside Butthole",
+        "name": "Nashville South",
+        "address": "209 Emory Drive"
     }
 ]
 

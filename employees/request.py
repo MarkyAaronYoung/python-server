@@ -1,13 +1,4 @@
-EMPLOYEES = [
-    {
-        "id": 1,
-        "name": "Jergen McFlergen",
-    },
-    {
-        "id": 2,
-        "name": "Dan McDannington",
-    }
-]
+EMPLOYEES = []
 
 
 def get_all_employees():
