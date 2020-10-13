@@ -1,3 +1,4 @@
+from models.location import Location
 LOCATIONS = [
     {
         "id": 1,

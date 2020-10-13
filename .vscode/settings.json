@@ -1,3 +1,12 @@
 {
-  "python.pythonPath": "/Users/markyoung/.pyenv/versions/3.8.1/bin/python"
+  "python.pythonPath": "/Users/markyoung/.pyenv/versions/3.8.1/bin/python",
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "Python Kennels",
+      "database": "${workspaceFolder:python-server}/kennel.db"
+    }
+  ],
+  "sqltools.useNodeRuntime": true
 }
