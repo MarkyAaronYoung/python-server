@@ -7,3 +7,6 @@ class Location():
         self.id = id
         self.name = name
         self.address = address
+
+    def __repr__(self):
+        return f"{self.name} is at {self.address}"
