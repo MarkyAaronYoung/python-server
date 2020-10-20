@@ -6,7 +6,38 @@ EMPLOYEES = [
     Employee(1, "Butt McButtenstein", "756 Slaughter Ct", 2)
 ]
 
+def get_employees_by_location(location_id):
+    with sqlite3.connect('../../kennel.db') as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
 
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.name,
+            a.address,
+            a.location_id
+        FROM Employee a
+        WHERE a.location_id = ?
+        """, (location_id,))
+
+        employees = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+
+            # Create an employee instance from the current row.
+            # Note that the database fields are specified in
+            # exact order of the parameters defined in the
+            # Employee class above.
+            employee = Employee(row['id'], row['name'],
+                                row['address'], row['location_id'])
+
+            employees.append(employee.__dict__)
+
+    return json.dumps(employees)
+    
 def get_all_employees():
     # Open a connection to the database
     with sqlite3.connect("./kennel.db") as conn:

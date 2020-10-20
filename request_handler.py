@@ -1,8 +1,8 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from animals import get_all_animals, get_single_animal, create_animal, delete_animal, update_animal
+from animals import get_all_animals, get_single_animal, create_animal, delete_animal, update_animal, get_animals_by_location, get_animals_by_status
 from locations import get_all_locations, get_single_location, create_location, delete_location, update_location
-from employees import get_all_employees, get_single_employee, create_employee, delete_employee, update_employee
+from employees import get_all_employees, get_single_employee, create_employee, delete_employee, update_employee, get_employees_by_location
 from customers import get_all_customers, get_single_customer, create_customer, delete_customer, update_customer, get_customers_by_email
 
 # Here's a class. It inherits from another class.
@@ -56,7 +56,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         # items in it, which means the request was for
         # `/animals` or `/animals/2`
         if len(parsed) == 2:
-            ( resource, id ) = parsed
+            (resource, id) = parsed
 
             if resource == "animals":
                 if id is not None:
@@ -68,21 +68,31 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = f"{get_single_customer(id)}"
                 else:
                     response = f"{get_all_customers()}"
+            elif resource == "employees":
+                if id is not None:
+                    response = f"{get_single_employee(id)}"
+                else:
+                    response = f"{get_all_employees()}"
 
         # Response from parse_url() is a tuple with 3
         # items in it, which means the request was for
         # `/resource?parameter=value`
         elif len(parsed) == 3:
-            ( resource, key, value ) = parsed
+            (resource, key, value) = parsed
 
             # Is the resource `customers` and was there a
             # query parameter that specified the customer
             # email as a filtering value?
             if key == "email" and resource == "customers":
                 response = get_customers_by_email(value)
+            if key == "location_id" and resource == "animals":
+                response = get_animals_by_location(value)
+            if key == 'status' and resource == 'animals':
+                response = get_animals_by_status(value)
+            if key == "location_id" and resource == "employees":
+                response = get_employees_by_location(value)
 
         self.wfile.write(response.encode())
-
     # Here's a method on the class that overrides the parent's method.
     # It handles any POST request.
     def do_POST(self):
@@ -136,27 +146,27 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any PUT request.
-    def do_PUT(self):
+def do_PUT(self):
+    self._set_headers(204)
+    content_len = int(self.headers.get('content-length', 0))
+    post_body = self.rfile.read(content_len)
+    post_body = json.loads(post_body)
+
+    # Parse the URL
+    (resource, id) = self.parse_url(self.path)
+   
+    success = False
+
+    if resource == "animals":
+        success = update_animal(id, post_body)
+    # rest of the elif's
+    
+    if success:
         self._set_headers(204)
-        content_len = int(self.headers.get('content-length', 0))
-        post_body = self.rfile.read(content_len)
-        post_body = json.loads(post_body)
+    else:
+        self._set_headers(404)
 
-        # Parse the URL
-        (resource, id) = self.parse_url(self.path)
-
-        # Delete a single animal from the list
-        if resource == "animals":
-            update_animal(id, post_body)
-        elif resource == "customers":
-            update_customer(id, post_body)
-        elif resource == "locations":
-            update_location(id, post_body)
-        elif resource == "employees":
-            update_employee(id, post_body)
-
-        # Encode the new animal and send in response
-        self.wfile.write("".encode())
+    self.wfile.write("".encode())
 
 
 # This function is not inside the class. It is the starting
@@ -175,3 +185,6 @@ def do_OPTIONS(self):
     self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
     self.send_header('Access-Control-Allow-Headers', 'X-Requested-With')
     self.end_headers()
+
+if __name__ == "__main__":
+    main()
