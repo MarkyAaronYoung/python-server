@@ -117,16 +117,16 @@ def get_all_animals():
         for row in dataset:
 
     # Create an animal instance from the current row
-            animal = Animal(row['name'], row['breed'], row['status'],
-                            row['location_id'], row['customer_id'], row['id'])
+            animal = Animal(row['id'], row['name'], row['breed'], row['status'],
+                            row['location_id'], row['customer_id'])
 
             # Create a Location instance from the current row
-            location = Location(row['id'], row['location_name'], row['location_address'])
+            location = Location(row['location_id'], row['location_name'], row['location_address'])
 
             # Add the dictionary representation of the location to the animal
             animal.location = location.__dict__
 
-            customer = Customer(row['id'], row['customer_name'], row['customer_address'])
+            customer = Customer(row['customer_id'], row['customer_name'], row['customer_address'])
 
             animal.customer = customer.__dict__
             # Add the dictionary representation of the animal to the list
